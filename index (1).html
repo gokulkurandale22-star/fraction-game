@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fraction Division Game</title>
+</head>
+<body>
+
+<h2>Fraction Division Game</h2>
+
+<p id="question"></p>
+
+<input type="number" id="num" placeholder="Numerator">
+<input type="number" id="den" placeholder="Denominator">
+
+<br><br>
+<button onclick="checkAnswer()">Submit</button>
+
+<p id="result"></p>
+<p id="score">Score: 0</p>
+
+<script>
+let score = 0;
+let n1, d1, n2, d2;
+
+function generateQuestion() {
+    n1 = Math.floor(Math.random() * 9) + 1;
+    d1 = Math.floor(Math.random() * 9) + 1;
+    n2 = Math.floor(Math.random() * 9) + 1;
+    d2 = Math.floor(Math.random() * 9) + 1;
+
+    document.getElementById("question").innerHTML =
+        `${n1}/${d1} ÷ ${n2}/${d2} = ?`;
+}
+
+function checkAnswer() {
+    let userNum = parseInt(document.getElementById("num").value);
+    let userDen = parseInt(document.getElementById("den").value);
+
+    // Correct answer: (n1/d1) ÷ (n2/d2) = (n1 * d2) / (d1 * n2)
+    let correctNum = n1 * d2;
+    let correctDen = d1 * n2;
+
+    // Simplify both answers
+    function gcd(a, b) {
+        return b === 0 ? a : gcd(b, a % b);
+    }
+
+    let g1 = gcd(correctNum, correctDen);
+    correctNum /= g1;
+    correctDen /= g1;
+
+    let g2 = gcd(userNum, userDen);
+    userNum /= g2;
+    userDen /= g2;
+
+    if (userNum === correctNum && userDen === correctDen) {
+        document.getElementById("result").innerHTML = "✅ Correct!";
+        score++;
+    } else {
+        document.getElementById("result").innerHTML =
+            `❌ Wrong! Correct answer is ${correctNum}/${correctDen}`;
+    }
+
+    document.getElementById("score").innerHTML = "Score: " + score;
+
+    generateQuestion();
+
+    document.getElementById("num").value = "";
+    document.getElementById("den").value = "";
+}
+
+generateQuestion();
+</script>
+
+</body>
+</html>
